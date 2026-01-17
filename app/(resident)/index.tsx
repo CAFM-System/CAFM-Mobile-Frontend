@@ -29,6 +29,7 @@ export default function ResidentDashboard() {
   const [filter, setFilter] = useState<"all" | "active" | "resolved">("all");
   const [openCreate, setOpenCreate] = useState(false);
 
+
   useEffect(() => {
     fetchTickets();
   }, []);
@@ -68,6 +69,10 @@ export default function ResidentDashboard() {
         close={() => setOpenCreate(false)}
         refresh={fetchTickets}
       />
+
+      
+      
+      
 
        
       <View className="px-4 mt-4">
@@ -130,6 +135,12 @@ export default function ResidentDashboard() {
             renderItem={({ item }) => (
               <TicketCard
                 ticket={item}
+                onPress={() =>
+                  router.push({
+                    pathname: "/(resident)/ticketDetails",
+                    params: { id: item.id },
+                  })
+                }
               />
             )}
           />

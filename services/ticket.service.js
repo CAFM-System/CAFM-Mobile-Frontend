@@ -12,7 +12,7 @@ const TicketService = {
     },
 
     async updateStatusHistory(payload){
-        const response = await apiClient.get("/progress-history"+payload);
+        const response = await apiClient.get("/progress-history/"+payload);
         return response;
     },
 
@@ -21,7 +21,12 @@ const TicketService = {
             priority 
         });
         return response;
+    },
+    async getTicketById(ticketId){
+        const response = await apiClient.get("/tickets/"+ticketId);
+        return response;
     }
+
 }
 
 export default TicketService;

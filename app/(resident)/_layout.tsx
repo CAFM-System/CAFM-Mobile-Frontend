@@ -31,6 +31,12 @@ export default function ResidentLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="ticketDetails"
+        options={{
+          href: null, // 👈 THIS hides the tab
+        }}
+      />
     </Tabs>
   );
 }
