@@ -1,7 +1,7 @@
 import StatusHistory from "@/components/common/StatusHistory";
 import { ResidentAction } from "@/components/resident/ResidentAction";
 import ResidentService from "@/services/resident.service";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import {
     CircleAlert,
     Clock,
@@ -10,7 +10,7 @@ import {
     X,
 } from "lucide-react-native";
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
     ActivityIndicator,
     Alert,
@@ -51,11 +51,16 @@ export default function TicketDetailsScreen() {
     fetchTicket();
   }, [ticketId]);
 
-  useEffect(() => {
+  useFocusEffect(
+  useCallback(() => {
     if (!ticketId || Number.isNaN(ticketId)) return;
+
     setHistoryLoading(true);
     fetchStatusHistory();
-  }, [ticketId]);
+
+  }, [ticketId])
+);
+
 
   useEffect(() => {
     setStatusHistory([]);
@@ -209,7 +214,7 @@ export default function TicketDetailsScreen() {
           {["resolved", "closed"].includes(data.status) &&<ResidentAction
             data={residentActionData}
             ticketId={ticketId}
-            refresh={fetchTicket}
+            refresh={()=>{}}
             onClose={() => router.back()}
             sendFeedback={handleRatingWithFeedback}
           />}
