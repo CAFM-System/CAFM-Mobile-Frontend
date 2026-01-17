@@ -1,7 +1,7 @@
 import TopBanner from "@/components/resident/TopBanner";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -30,9 +30,11 @@ export default function ResidentDashboard() {
   const [openCreate, setOpenCreate] = useState(false);
 
 
-  useEffect(() => {
+  useFocusEffect(
+  useCallback(() => {
     fetchTickets();
-  }, []);
+  }, [])
+);
 
   const fetchTickets = async () => {
     try {

@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "CAFM-Mobile",
-    "slug": "CAFM-Mobile",
+    "name": "FACILYTRON",
+    "slug": "Computer Aided Facility Management",
+    "icon":"./assets/images/logo_withoutBG.png",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "cafmmobile",
@@ -10,8 +11,11 @@
     "ios": {
       "supportsTablet": true
     },
+    
+
     "android": {
       "adaptiveIcon": {
+        "foregroundImage": "./assets/images/logo_withoutBG.png",
         "backgroundColor": "#E6F4FE"
       },
       "edgeToEdgeEnabled": true,
