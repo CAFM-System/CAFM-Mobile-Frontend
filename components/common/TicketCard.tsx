@@ -31,22 +31,28 @@ export default function TicketCard({ ticket, onPress }: Props) {
 
   const status = ticket.status?.toLowerCase() || "open";
   const priority = ticket.priority?.toLowerCase() || "low";
+  const dateTime = ticket.created_at?.toString();
+  const [date, time] = dateTime?.split("T") || ["", ""];
 
-  const statusStyle = {
-    open: "bg-secondary/10",
-    assigned: "bg-accent/20",
-    in_progress: "bg-accent/30",
-    resolved: "bg-green-200",
-    closed: "bg-secondary/20",
-    reopened: "bg-orange-200",
-  }[status] || "bg-secondary/10";
+  const formattedTime = time ? time.split(".")[0] : "";
 
-  const priorityStyle = {
-    low: "bg-secondary/10",
-    medium: "bg-accent/20",
-    high: "bg-orange-200",
-    urgent: "bg-red-200",
-  }[priority] || "bg-secondary/10";
+  const statusStyle =
+    {
+      open: "bg-secondary/10",
+      assigned: "bg-accent/20",
+      in_progress: "bg-accent/30",
+      resolved: "bg-green-200",
+      closed: "bg-secondary/20",
+      reopened: "bg-orange-200",
+    }[status] || "bg-secondary/10";
+
+  const priorityStyle =
+    {
+      low: "bg-secondary/10",
+      medium: "bg-accent/20",
+      high: "bg-orange-200",
+      urgent: "bg-red-200",
+    }[priority] || "bg-secondary/10";
 
   return (
     <Pressable
@@ -55,9 +61,7 @@ export default function TicketCard({ ticket, onPress }: Props) {
     >
       {/* Header */}
       <View className="flex-row flex-wrap items-center gap-2 mb-2">
-        <Text className="text-secondary font-semibold">
-          #{id}
-        </Text>
+        <Text className="text-secondary font-semibold">#{id}</Text>
 
         <View className={`px-3 py-1 rounded-full ${statusStyle}`}>
           <Text className="text-secondary text-xs font-semibold capitalize">
@@ -78,10 +82,7 @@ export default function TicketCard({ ticket, onPress }: Props) {
       </Text>
 
       {/* Description */}
-      <Text
-        className="text-secondary/70 text-sm mb-4"
-        numberOfLines={2}
-      >
+      <Text className="text-secondary/70 text-sm mb-4" numberOfLines={2}>
         {desc}
       </Text>
 
@@ -91,16 +92,12 @@ export default function TicketCard({ ticket, onPress }: Props) {
         <View className="gap-1">
           <View className="flex-row items-center gap-2">
             <Ionicons name="location-outline" size={14} color="#334443" />
-            <Text className="text-secondary/70 text-xs">
-              {ticket.location}
-            </Text>
+            <Text className="text-secondary/70 text-xs">{ticket.location}</Text>
           </View>
 
           <View className="flex-row items-center gap-2">
             <Ionicons name="person-outline" size={14} color="#334443" />
-            <Text className="text-secondary/70 text-xs">
-              {name}
-            </Text>
+            <Text className="text-secondary/70 text-xs">{name}</Text>
           </View>
         </View>
 
@@ -108,15 +105,13 @@ export default function TicketCard({ ticket, onPress }: Props) {
         <View className="gap-1 items-end">
           <View className="flex-row items-center gap-2">
             <Ionicons name="alert-circle-outline" size={14} color="#334443" />
-            <Text className="text-secondary/70 text-xs">
-              {category}
-            </Text>
+            <Text className="text-secondary/70 text-xs">{category}</Text>
           </View>
 
           <View className="flex-row items-center gap-2">
             <Ionicons name="time-outline" size={14} color="#334443" />
             <Text className="text-secondary/70 text-xs">
-              {ticket.created_at}
+              {date + " "} {formattedTime}
             </Text>
           </View>
         </View>
