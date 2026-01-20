@@ -2,22 +2,16 @@ import StatusHistory from "@/components/common/StatusHistory";
 import { ResidentAction } from "@/components/resident/ResidentAction";
 import ResidentService from "@/services/resident.service";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import {
-    CircleAlert,
-    Clock,
-    MapPin,
-    User,
-    X,
-} from "lucide-react-native";
+import { CircleAlert, Clock, MapPin, User, X } from "lucide-react-native";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    Pressable,
-    ScrollView,
-    Text,
-    View,
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
 } from "react-native";
 import TicketService from "../../services/ticket.service";
 
@@ -25,8 +19,7 @@ export default function TicketDetailsScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
 
-  const ticketId =
-    typeof id === "string" ? Number(id) : Number(id?.[0]);
+  const ticketId = typeof id === "string" ? Number(id) : Number(id?.[0]);
 
   const [data, setData] = useState<any>(null);
   const [statusHistory, setStatusHistory] = useState<any[]>([]);
@@ -52,15 +45,13 @@ export default function TicketDetailsScreen() {
   }, [ticketId]);
 
   useFocusEffect(
-  useCallback(() => {
-    if (!ticketId || Number.isNaN(ticketId)) return;
+    useCallback(() => {
+      if (!ticketId || Number.isNaN(ticketId)) return;
 
-    setHistoryLoading(true);
-    fetchStatusHistory();
-
-  }, [ticketId])
-);
-
+      setHistoryLoading(true);
+      fetchStatusHistory();
+    }, [ticketId]),
+  );
 
   useEffect(() => {
     setStatusHistory([]);
@@ -70,6 +61,11 @@ export default function TicketDetailsScreen() {
     setCloseComment("");
     setReopenComment("");
   }, [ticketId]);
+
+  const dateTime = data.created_at?.toString();
+  const [date, time] = dateTime?.split("T") || ["", ""];
+
+  const formattedTime = time ? time.split(".")[0] : "";
 
   const fetchTicket = async () => {
     try {
@@ -164,9 +160,7 @@ export default function TicketDetailsScreen() {
             {data.title}
           </Text>
 
-          <Text className="text-secondary/70 leading-6">
-            {data.complaint}
-          </Text>
+          <Text className="text-secondary/70 leading-6">{data.complaint}</Text>
         </View>
 
         {/* Info Card */}
@@ -189,7 +183,7 @@ export default function TicketDetailsScreen() {
           <InfoRow
             icon={<Clock size={18} color="#F0A500" />}
             label="Created"
-            value={data.created_at}
+            value={date + "  " + formattedTime}
           />
         </View>
 
@@ -202,23 +196,21 @@ export default function TicketDetailsScreen() {
           {historyLoading ? (
             <ActivityIndicator color="#F0A500" />
           ) : (
-            <StatusHistory
-              data={statusHistory}
-              refresh={fetchStatusHistory}
-            />
+            <StatusHistory data={statusHistory} refresh={fetchStatusHistory} />
           )}
         </View>
 
         {/* Actions */}
-        
-          {["resolved", "closed"].includes(data.status) &&<ResidentAction
+
+        {["resolved", "closed"].includes(data.status) && (
+          <ResidentAction
             data={residentActionData}
             ticketId={ticketId}
-            refresh={()=>{}}
+            refresh={() => {}}
             onClose={() => router.back()}
             sendFeedback={handleRatingWithFeedback}
-          />}
-        
+          />
+        )}
       </ScrollView>
     </View>
   );
@@ -242,12 +234,8 @@ function InfoRow({
       </View>
 
       <View className="flex-1">
-        <Text className="text-xs text-secondary/50 mb-0.5">
-          {label}
-        </Text>
-        <Text className="text-sm font-semibold text-secondary">
-          {value}
-        </Text>
+        <Text className="text-xs text-secondary/50 mb-0.5">{label}</Text>
+        <Text className="text-sm font-semibold text-secondary">{value}</Text>
       </View>
     </View>
   );
