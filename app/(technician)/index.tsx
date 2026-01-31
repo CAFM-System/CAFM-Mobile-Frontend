@@ -79,7 +79,10 @@ export default function TechnicianDashboard() {
             renderItem={({ item }) => (
               <TicketCard
                 ticket={item}
-                onPress={() => { }}
+                onPress={() => router.push({
+                  pathname: "/(technician)/ticketDetails",
+                  params: { id: item.id },
+                })}
               />
             )}
           />
