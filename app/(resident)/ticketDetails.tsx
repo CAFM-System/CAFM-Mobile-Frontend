@@ -1,6 +1,7 @@
 import StatusHistory from "@/components/common/StatusHistory";
 import { ResidentAction } from "@/components/resident/ResidentAction";
 import ResidentService from "@/services/resident.service";
+import TicketService from "@/services/ticket.service";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { CircleAlert, Clock, MapPin, User, X } from "lucide-react-native";
 import type { ReactNode } from "react";
@@ -13,7 +14,6 @@ import {
   Text,
   View,
 } from "react-native";
-import TicketService from "../../services/ticket.service";
 
 export default function TicketDetailsScreen() {
   const router = useRouter();
@@ -32,6 +32,39 @@ export default function TicketDetailsScreen() {
   const [feedback, setFeedback] = useState("");
   const [closeComment, setCloseComment] = useState("");
   const [reOpenComment, setReopenComment] = useState("");
+
+  /* ---------------- API FUNCTIONS (MUST BE ABOVE HOOKS) ---------------- */
+
+  const fetchTicket = async () => {
+    try {
+      const res = await TicketService.getTicketById(ticketId);
+
+      if (!res.data?.ticket) {
+        Alert.alert("Ticket not found");
+        router.back();
+        return;
+      }
+
+      setData(res.data.ticket);
+    } catch (error) {
+      Alert.alert("Failed to load ticket");
+    } finally {
+      setTicketLoading(false);
+    }
+  };
+
+  const fetchStatusHistory = async () => {
+    try {
+      const res = await TicketService.updateStatusHistory(ticketId);
+      setStatusHistory(res.data || []);
+    } catch (error) {
+      console.error("Failed to load status history", error);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  /* ---------------- EFFECTS ---------------- */
 
   useEffect(() => {
     if (!ticketId || Number.isNaN(ticketId)) {
@@ -62,45 +95,7 @@ export default function TicketDetailsScreen() {
     setReopenComment("");
   }, [ticketId]);
 
-  const dateTime = data.created_at?.toString();
-  const [date, time] = dateTime?.split("T") || ["", ""];
-
-  const formattedTime = time ? time.split(".")[0] : "";
-
-  const fetchTicket = async () => {
-    try {
-      const res = await TicketService.getTicketById(ticketId);
-      setData(res.data.ticket);
-    } catch {
-      Alert.alert("Failed to load ticket");
-    } finally {
-      setTicketLoading(false);
-    }
-  };
-
-  const fetchStatusHistory = async () => {
-    try {
-      const res = await TicketService.updateStatusHistory(ticketId);
-      setStatusHistory(res.data || []);
-    } catch (error) {
-      console.error("Failed to load status history", error);
-    } finally {
-      setHistoryLoading(false);
-    }
-  };
-
-  const handleRatingWithFeedback = async () => {
-    try {
-      await ResidentService.addRatingWithFeedback(data.id, {
-        rating,
-        review: feedback,
-      });
-      Alert.alert("Success", "Rating submitted successfully");
-      setShowRatingTab(false);
-    } catch (error) {
-      Alert.alert("Error", "Failed to submit rating");
-    }
-  };
+  /* ---------------- LOADING & NULL STATES ---------------- */
 
   if (ticketLoading) {
     return (
@@ -110,7 +105,19 @@ export default function TicketDetailsScreen() {
     );
   }
 
-  if (!data) return null;
+  if (!data) {
+    return (
+      <View className="flex-1 justify-center items-center bg-primary">
+        <Text className="text-secondary">Ticket not found</Text>
+      </View>
+    );
+  }
+
+  /* ---------------- SAFE DATA ACCESS ---------------- */
+
+  const dateTime = data.created_at?.toString() ?? "";
+  const [date, time] = dateTime.split("T");
+  const formattedTime = time ? time.split(".")[0] : "";
 
   const residentActionData = {
     status: data.status,
@@ -129,6 +136,21 @@ export default function TicketDetailsScreen() {
     setCloseComment,
     setReopenComment,
   };
+
+  const handleRatingWithFeedback = async () => {
+    try {
+      await ResidentService.addRatingWithFeedback(data.id, {
+        rating,
+        review: feedback,
+      });
+      Alert.alert("Success", "Rating submitted successfully");
+      setShowRatingTab(false);
+    } catch (error) {
+      Alert.alert("Error", "Failed to submit rating");
+    }
+  };
+
+  /* ---------------- UI ---------------- */
 
   return (
     <View className="flex-1 bg-primary">
@@ -183,7 +205,7 @@ export default function TicketDetailsScreen() {
           <InfoRow
             icon={<Clock size={18} color="#F0A500" />}
             label="Created"
-            value={date + "  " + formattedTime}
+            value={`${date} ${formattedTime}`}
           />
         </View>
 
@@ -201,12 +223,11 @@ export default function TicketDetailsScreen() {
         </View>
 
         {/* Actions */}
-
         {["resolved", "closed"].includes(data.status) && (
           <ResidentAction
             data={residentActionData}
             ticketId={ticketId}
-            refresh={() => {}}
+            refresh={fetchTicket}
             onClose={() => router.back()}
             sendFeedback={handleRatingWithFeedback}
           />
@@ -216,7 +237,7 @@ export default function TicketDetailsScreen() {
   );
 }
 
-/* ---------- Helper ---------- */
+/* ---------------- HELPER COMPONENT ---------------- */
 
 function InfoRow({
   icon,
