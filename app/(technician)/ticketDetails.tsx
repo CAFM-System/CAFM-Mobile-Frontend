@@ -160,8 +160,13 @@ const ticketDetails = () => {
                 </View>
 
                 {/* Acctions */}
-                {["assigned"].includes(data.status) && (
-                    <TechnicianAction />
+                {["assigned", "in_progress"].includes(data.status) && (
+                    <TechnicianAction
+                        ticketId={ticketId}
+                        data={data}
+                        refresh={fetchTicket}
+                        refreshStatus={fetchStatusHistory}
+                    />
                 )}
             </ScrollView>
         </View>
