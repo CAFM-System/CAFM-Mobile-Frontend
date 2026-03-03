@@ -2,7 +2,7 @@
   "expo": {
     "name": "FACILYTRON",
     "slug": "Computer Aided Facility Management",
-    "icon":"./assets/images/logo_withoutBG.png",
+    "icon": "./assets/images/logo_withoutBG.png",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "cafmmobile",
@@ -11,8 +11,6 @@
     "ios": {
       "supportsTablet": true
     },
-    
-
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo_withoutBG.png",
@@ -25,7 +23,8 @@
       "output": "static"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true,
