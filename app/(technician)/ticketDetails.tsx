@@ -4,6 +4,8 @@ import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import {
     ActivityIndicator,
     Alert,
+    KeyboardAvoidingView,
+    Platform,
     Pressable,
     ScrollView,
     Text,
@@ -94,7 +96,10 @@ const ticketDetails = () => {
     const formattedTime = time ? time.split('.')[0] : "";
 
     return (
-        <View className="flex-1 bg-primary">
+        <KeyboardAvoidingView
+            className="flex-1 bg-primary"
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
             <View className="flex-row items-center px-6 py-5 bg-white border-b border-secondary/10 shadow-sm">
                 <Pressable
                     onPress={() => router.back()}
@@ -108,7 +113,11 @@ const ticketDetails = () => {
                 </Text>
             </View>
 
-            <ScrollView className="px-6" contentContainerStyle={{ paddingBottom: 40 }}>
+            <ScrollView
+                className="px-6"
+                contentContainerStyle={{ paddingBottom: 40 }}
+                keyboardShouldPersistTaps="handled"
+            >
                 {/* Ticket Info */}
                 <View className="mt-6 mb-6">
                     <Text className="text-xs text-secondary/50 mb-1">
@@ -160,11 +169,16 @@ const ticketDetails = () => {
                 </View>
 
                 {/* Acctions */}
-                {["assigned"].includes(data.status) && (
-                    <TechnicianAction />
+                {["assigned", "in_progress"].includes(data.status) && (
+                    <TechnicianAction
+                        ticketId={ticketId}
+                        data={data}
+                        refresh={fetchTicket}
+                        refreshStatus={fetchStatusHistory}
+                    />
                 )}
             </ScrollView>
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 
