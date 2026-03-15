@@ -1,12 +1,6 @@
 import { useRouter } from "expo-router";
 import React from "react";
-import {
-    Dimensions,
-    Image,
-    Pressable,
-    Text,
-    View,
-} from "react-native";
+import { Dimensions, Image, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
@@ -16,20 +10,17 @@ const LandingScreen: React.FC = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-primary">
-      
       {/* Header */}
       <View className="flex-row justify-between items-center px-6 py-4">
         <Text className="text-secondary text-2xl font-bold tracking-wide">
-          MyApp
+          FACILITRON
         </Text>
 
         <Pressable
           onPress={() => router.push("/login")}
           className="bg-accent px-5 py-2 rounded-full"
         >
-          <Text className="text-secondary font-semibold text-sm">
-            Login
-          </Text>
+          <Text className="text-secondary font-semibold text-sm">Login</Text>
         </Pressable>
       </View>
 
@@ -53,8 +44,8 @@ const LandingScreen: React.FC = () => {
         </Text>
 
         <Text className="text-secondary/70 text-base text-center mt-4 leading-relaxed">
-          Manage services, tickets, and activities with a modern,
-          simple, and reliable mobile experience.
+          Manage services, tickets, and activities with a modern, simple, and
+          reliable mobile experience.
         </Text>
 
         {/* CTA Buttons */}
@@ -68,9 +59,7 @@ const LandingScreen: React.FC = () => {
             </Text>
           </Pressable>
 
-          <Pressable
-            className="border border-secondary/40 px-8 py-4 rounded-2xl"
-          >
+          <Pressable className="border border-secondary/40 px-8 py-4 rounded-2xl">
             <Text className="text-secondary font-medium text-base">
               Learn More
             </Text>
@@ -81,7 +70,6 @@ const LandingScreen: React.FC = () => {
       {/* Feature Cards */}
       <View className="px-6 pb-10">
         <View className="flex-row gap-4">
-          
           <View className="flex-1 bg-secondary/10 rounded-2xl p-4">
             <Text className="text-secondary font-semibold text-lg mb-1">
               Fast
@@ -104,14 +92,10 @@ const LandingScreen: React.FC = () => {
             <Text className="text-secondary font-semibold text-lg mb-1">
               Simple
             </Text>
-            <Text className="text-secondary/70 text-sm">
-              Easy for everyone
-            </Text>
+            <Text className="text-secondary/70 text-sm">Easy for everyone</Text>
           </View>
-
         </View>
       </View>
-
     </SafeAreaView>
   );
 };

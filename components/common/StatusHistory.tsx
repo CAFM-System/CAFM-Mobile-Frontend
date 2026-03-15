@@ -7,6 +7,7 @@ interface Props {
 }
 
 export default function StatusHistory({ data }: Props) {
+  console.log("StatusHistory data:", data);
   if (!data || data.length === 0) {
     return (
       <View className="items-center py-6">

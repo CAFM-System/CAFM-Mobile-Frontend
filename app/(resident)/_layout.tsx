@@ -23,6 +23,15 @@ export default function ResidentLayout() {
         }}
       />
       <Tabs.Screen
+        name="visitors"
+        options={{
+          title: "Visitors",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="people" size={22} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",

@@ -56,6 +56,7 @@ export default function TicketDetailsScreen() {
   const fetchStatusHistory = async () => {
     try {
       const res = await TicketService.updateStatusHistory(ticketId);
+      console.log("Fetched status history:", res.data);
       setStatusHistory(res.data || []);
     } catch (error) {
       console.error("Failed to load status history", error);
