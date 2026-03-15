@@ -23,6 +23,9 @@ const visitorService = {
     );
     return response;
   },
+  async checkOutVisitor(token) {
+    const response = await apiClient.post("/visitors/scan", { token });
+  },
 };
 
 export default visitorService;
