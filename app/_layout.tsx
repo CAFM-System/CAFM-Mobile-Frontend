@@ -18,26 +18,30 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack 
-          screenOptions={{ 
+        <Stack
+          screenOptions={{
             headerShown: false,
             contentStyle: { backgroundColor: 'transparent' }
           }}
         >
-          <Stack.Screen 
-            name="index" 
+          <Stack.Screen
+            name="index"
             options={{ headerShown: false }}
           />
-          <Stack.Screen 
-            name="login" 
+          <Stack.Screen
+            name="login"
             options={{ headerShown: false }}
           />
-          <Stack.Screen 
-            name="(resident)" 
+          <Stack.Screen
+            name="(resident)"
             options={{ headerShown: false }}
           />
-          <Stack.Screen 
-            name="(technician)" 
+          <Stack.Screen
+            name="(technician)"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="(frontdesk)"
             options={{ headerShown: false }}
           />
         </Stack>
