@@ -9,7 +9,12 @@ const TechnicianService = {
     async resolveTickets(ticketId, data) {
         const response = await apiClient.put("/technicians/resolve-ticket/" + ticketId, data);
         return response;
-    }
+    },
+
+    async getMyReviews() {
+        const response = await apiClient.get("/ticket-reviews/my-reviews");
+        return response;
+    },
 }
 export default TechnicianService;
 

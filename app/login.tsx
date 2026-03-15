@@ -49,6 +49,8 @@ export default function LoginScreen() {
           router.replace("/(resident)");
         } else if (role === "technician") {
           router.replace("/(technician)");
+        } else if (role === "frontdesk") {
+          router.replace("/(frontdesk)");
         } else {
           console.warn("Unknown role:", role);
         }
@@ -57,7 +59,7 @@ export default function LoginScreen() {
 
     } catch (err) {
       setIsLoggingIn(false);
-       console.error("LOGIN ERROR:", err);
+      console.error("LOGIN ERROR:", err);
       alert("Login failed");
     }
   };

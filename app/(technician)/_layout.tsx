@@ -14,11 +14,11 @@ export default function TechnicianLayout() {
         }}
       />
       <Tabs.Screen
-        name="notification"
+        name="reviews"
         options={{
-          title: "Notifications",
+          title: "Reviews",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="notifications" size={22} color={color} />
+            <Ionicons name="chatbubbles-outline" size={22} color={color} />
           ),
         }}
       />
