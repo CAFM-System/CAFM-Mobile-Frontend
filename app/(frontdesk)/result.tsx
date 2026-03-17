@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import { ActivityIndicator, Modal, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import visitorService from '@/services/visitor.service';
@@ -8,6 +9,11 @@ import visitorService from '@/services/visitor.service';
 export default function ResultPage() {
     const router = useRouter();
     const { scannedData } = useLocalSearchParams<{ scannedData?: string | string[] }>();
+    const [isAccepting, setIsAccepting] = useState(false);
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertTitle, setAlertTitle] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertType, setAlertType] = useState<'success' | 'error'>('success');
 
     const raw = Array.isArray(scannedData) ? scannedData[0] : scannedData ?? '';
     const [token, name, phone, email, type] = raw.split('/');
@@ -19,19 +25,73 @@ export default function ResultPage() {
         { label: 'Type', value: type },
     ];
 
+    const openStyledAlert = (
+        title: string,
+        message: string,
+        type: 'success' | 'error'
+    ) => {
+        setAlertTitle(title);
+        setAlertMessage(message);
+        setAlertType(type);
+        setAlertVisible(true);
+    };
+
     const handleAccept = async () => {
+        if (isAccepting) return;
+
         try {
+            setIsAccepting(true);
             await visitorService.checkOutVisitor(token);
-            Alert.alert('Checked In', 'Visitor has been successfully checked in.', [
-                { text: 'OK', onPress: () => router.replace('/(frontdesk)') },
-            ]);
+            openStyledAlert('Checked In', 'Visitor has been successfully checked in.', 'success');
         } catch (err) {
-            Alert.alert('Error', 'Visitor already checked in.');
+            openStyledAlert('Error', 'Visitor already checked in.', 'error');
+        } finally {
+            setIsAccepting(false);
         }
     };
 
     return (
         <SafeAreaView className="flex-1 bg-primary">
+            <Modal
+                animationType="fade"
+                transparent
+                visible={alertVisible}
+                onRequestClose={() => setAlertVisible(false)}
+            >
+                <View className="flex-1 bg-black/40 items-center justify-center px-6">
+                    <View className="w-full bg-white rounded-2xl p-5 border border-secondary/10">
+                        <View className="items-center mb-3">
+                            <View
+                                className={`h-12 w-12 rounded-full items-center justify-center ${alertType === 'success' ? 'bg-green-100' : 'bg-red-100'
+                                    }`}
+                            >
+                                <Ionicons
+                                    name={alertType === 'success' ? 'checkmark' : 'close'}
+                                    size={24}
+                                    color={alertType === 'success' ? '#16a34a' : '#dc2626'}
+                                />
+                            </View>
+                        </View>
+
+                        <Text className="text-secondary text-lg font-bold text-center">{alertTitle}</Text>
+                        <Text className="text-secondary/70 text-center mt-2 mb-5">{alertMessage}</Text>
+
+                        <TouchableOpacity
+                            className={`rounded-xl py-3 items-center ${alertType === 'success' ? 'bg-green-500' : 'bg-red-500'
+                                }`}
+                            onPress={() => {
+                                setAlertVisible(false);
+                                if (alertType === 'success') {
+                                    router.replace('/(frontdesk)');
+                                }
+                            }}
+                        >
+                            <Text className="text-white font-semibold">OK</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
             {/* Title Bar */}
             <View className="flex-row items-center px-4 py-3 bg-white border-b border-secondary/10">
                 <TouchableOpacity
@@ -68,10 +128,16 @@ export default function ResultPage() {
                         <Text className="text-secondary font-semibold">Scan Another</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        className="flex-1 bg-green-500 rounded-xl py-3 items-center"
+                        className={`flex-1 rounded-xl py-3 items-center ${isAccepting ? 'bg-green-400' : 'bg-green-500'}`}
+                        disabled={isAccepting}
                         onPress={handleAccept}
                     >
-                        <Text className="text-white font-semibold">Accept</Text>
+                        <View className="flex-row items-center justify-center">
+                            {isAccepting && <ActivityIndicator size="small" color="#fff" />}
+                            <Text className={`text-white font-semibold ${isAccepting ? 'ml-2' : ''}`}>
+                                {isAccepting ? 'Accepting...' : 'Accept'}
+                            </Text>
+                        </View>
                     </TouchableOpacity>
                 </View>
             </View>

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "FACILYTRON",
-    "slug": "Computer Aided Facility Management",
+    "slug": "cafm-mobile-frontend",
     "icon": "./assets/images/logo_withoutBG.png",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.ComputerAidedFacilityManagement"
+      "bundleIdentifier": "com.anonymous.computeraidedfacilitymanagement"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +23,7 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.anonymous.ComputerAidedFacilityManagement"
+      "package": "com.anonymous.computeraidedfacilitymanagement"
     },
     "web": {
       "output": "static"
@@ -41,6 +41,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "fb13dad3-3b33-4bb1-9b01-c725a2b9eea7"
+      }
     }
   }
 }
