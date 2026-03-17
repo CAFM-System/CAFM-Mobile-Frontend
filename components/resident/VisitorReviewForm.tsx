@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
-import { Pressable, Text, View } from "react-native";
+import React, { useState } from "react";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 
 interface FormData {
   apartmentNo?: string;
@@ -20,7 +20,7 @@ interface FormData {
 interface Props {
   formData: FormData;
   onBack: () => void;
-  onSubmit: () => void;
+  onSubmit: () => Promise<void> | void;
 }
 
 export default function VisitorReviewForm({
@@ -28,6 +28,19 @@ export default function VisitorReviewForm({
   onBack,
   onSubmit,
 }: Props) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+
+    try {
+      setIsSubmitting(true);
+      await Promise.resolve(onSubmit());
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const ReviewItem = ({ label, value }: { label: string; value?: string }) => (
     <View className="w-1/2 mb-4">
       <Text className="text-xs text-gray-500 uppercase mb-1">{label}</Text>
@@ -99,10 +112,15 @@ export default function VisitorReviewForm({
         </Pressable>
 
         <Pressable
-          onPress={onSubmit}
-          className="bg-accent px-6 py-3 rounded-xl"
+          onPress={handleSubmit}
+          disabled={isSubmitting}
+          className={`px-6 py-3 rounded-xl flex-row items-center justify-center ${isSubmitting ? "bg-accent/70" : "bg-accent"
+            }`}
         >
-          <Text className="text-white font-semibold">Confirm & Submit</Text>
+          {isSubmitting && <ActivityIndicator size="small" color="#fff" />}
+          <Text className={`text-white font-semibold ${isSubmitting ? "ml-2" : ""}`}>
+            {isSubmitting ? "Submitting..." : "Confirm & Submit"}
+          </Text>
         </Pressable>
       </View>
     </View>

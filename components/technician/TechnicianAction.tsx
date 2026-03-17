@@ -1,6 +1,7 @@
 import * as DocumentPicker from 'expo-document-picker';
 import React, { useState } from 'react';
 import {
+    ActivityIndicator,
     Alert,
     ScrollView,
     Text,
@@ -35,8 +36,12 @@ const TechnicianAction = ({
     const [resolutionComment, setResolutionComment] = useState("");
     const [attachments, setAttachments] = useState<PickedFile[]>([]);
     const [sparepartsUsed, setSparepartsUsed] = useState("");
+    const [isAccepting, setIsAccepting] = useState(false);
+    const [isResolving, setIsResolving] = useState(false);
 
     const handleResolveTicket = async () => {
+        if (isResolving) return;
+
         let promises: any[] = [];
 
         for (let i = 0; i < attachments.length; i++) {
@@ -44,6 +49,7 @@ const TechnicianAction = ({
         }
 
         try {
+            setIsResolving(true);
             let urls = await Promise.all(promises);
 
             const data = {
@@ -61,6 +67,8 @@ const TechnicianAction = ({
             refreshStatus();
         } catch (err) {
             Alert.alert('Failed to mark task as resolved');
+        } finally {
+            setIsResolving(false);
         }
     };
 
@@ -93,13 +101,18 @@ const TechnicianAction = ({
     };
 
     const handleAcceptTask = async () => {
+        if (isAccepting) return;
+
         try {
+            setIsAccepting(true);
             await TechnicianService.startWork(ticketId);
             Alert.alert("Task accepted");
             refresh();
             refreshStatus();
         } catch (err) {
             Alert.alert("Failed to accept task");
+        } finally {
+            setIsAccepting(false);
         }
     };
 
@@ -146,11 +159,15 @@ const TechnicianAction = ({
                     <View className="mt-2 flex-row justify-evenly">
                         <TouchableOpacity
                             className="w-full"
+                            disabled={isAccepting}
                             onPress={handleAcceptTask}
                         >
-                            <Text className="text-center text-white font-semibold bg-green-500 px-4 py-2 rounded-xl">
-                                Accept
-                            </Text>
+                            <View className={`flex-row items-center justify-center px-4 py-2 rounded-xl ${isAccepting ? 'bg-green-400' : 'bg-green-500'}`}>
+                                {isAccepting && <ActivityIndicator size="small" color="#fff" />}
+                                <Text className={`text-center text-white font-semibold ${isAccepting ? 'ml-2' : ''}`}>
+                                    {isAccepting ? 'Accepting...' : 'Accept'}
+                                </Text>
+                            </View>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -220,11 +237,15 @@ const TechnicianAction = ({
                     <View className="mt-2 flex-row justify-evenly">
                         <TouchableOpacity
                             className="w-full"
+                            disabled={isResolving}
                             onPress={handleResolveTicket}
                         >
-                            <Text className="text-center text-white font-semibold bg-blue-500 px-4 py-2 rounded-xl">
-                                Mark Resolved
-                            </Text>
+                            <View className={`flex-row items-center justify-center px-4 py-2 rounded-xl ${isResolving ? 'bg-blue-400' : 'bg-blue-500'}`}>
+                                {isResolving && <ActivityIndicator size="small" color="#fff" />}
+                                <Text className={`text-center text-white font-semibold ${isResolving ? 'ml-2' : ''}`}>
+                                    {isResolving ? 'Resolving...' : 'Mark Resolved'}
+                                </Text>
+                            </View>
                         </TouchableOpacity>
                     </View>
                 </View>
