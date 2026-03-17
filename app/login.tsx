@@ -55,8 +55,6 @@ export default function LoginScreen() {
           console.warn("Unknown role:", role);
         }
       }, 800);
-
-
     } catch (err) {
       setIsLoggingIn(false);
       console.error("LOGIN ERROR:", err);
@@ -75,7 +73,6 @@ export default function LoginScreen() {
 
         {/* Content */}
         <View className="flex-1 justify-center px-6">
-
           {/* Logo */}
           <View className="items-center mb-8">
             <Image
@@ -93,7 +90,6 @@ export default function LoginScreen() {
 
           {/* Card */}
           <View className="bg-primary/90 rounded-3xl p-6 shadow-2xl">
-
             {/* Email */}
             <View className="mb-4">
               <Text className="text-secondary font-semibold mb-2">
@@ -167,26 +163,6 @@ export default function LoginScreen() {
                 </View>
               )}
             </Pressable>
-
-            {/* Divider */}
-            <View className="flex-row items-center my-6">
-              <View className="flex-1 h-px bg-secondary/20" />
-              <Text className="mx-3 text-secondary/60 text-sm">
-                New here?
-              </Text>
-              <View className="flex-1 h-px bg-secondary/20" />
-            </View>
-
-            {/* Register */}
-            <Pressable
-              onPress={() => router.push("/register")}
-              className="border border-secondary/30 rounded-xl py-3 items-center"
-            >
-              <Text className="text-secondary font-semibold">
-                Create Account
-              </Text>
-            </Pressable>
-
           </View>
         </View>
       </KeyboardAvoidingView>
