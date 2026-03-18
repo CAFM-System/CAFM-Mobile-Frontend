@@ -4,15 +4,20 @@
     "appVersionSource": "remote"
   },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
     "preview": {
-      "distribution": "internal"
+      "env": {
+        "EXPO_PUBLIC_BASE_URL": "http://192.168.1.101:4000/api",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://amnipbvoyqomedqbsiee.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtbmlwYnZveXFvbWVkcWJzaWVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxMzQzNTcsImV4cCI6MjA3OTcxMDM1N30.2-9ue1vV4_H07JKpxmZCk0SWLP-Iy0oJg9McvdqpL5korigin"
+      },
+      "android": {
+        "buildType": "apk"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "android": {
+        "buildType": "app-bundle"
+      }
     }
   },
   "submit": {
