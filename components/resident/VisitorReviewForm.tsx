@@ -41,10 +41,26 @@ export default function VisitorReviewForm({
     }
   };
 
-  const ReviewItem = ({ label, value }: { label: string; value?: string }) => (
-    <View className="w-1/2 mb-4">
-      <Text className="text-xs text-gray-500 uppercase mb-1">{label}</Text>
-      <Text className="font-semibold text-secondary">{value || "-"}</Text>
+  const formatVisitorType = (type: string) => {
+    if (type === "normal") return "Single Visit";
+    if (type === "regular") return "Frequent Guest";
+    return type || "-";
+  };
+
+  const ReviewItem = ({
+    label,
+    value,
+    fullWidth,
+  }: {
+    label: string;
+    value?: string;
+    fullWidth?: boolean;
+  }) => (
+    <View className={`${fullWidth ? "w-full" : "w-1/2"} mb-4 pr-2`}>
+      <Text className="text-xs text-gray-500 uppercase mb-1 tracking-wide">{label}</Text>
+      <Text className="font-semibold text-secondary" numberOfLines={2}>
+        {value || "-"}
+      </Text>
     </View>
   );
 
@@ -80,8 +96,8 @@ export default function VisitorReviewForm({
           <ReviewItem label="Full Name" value={formData.fullName} />
           <ReviewItem label="Phone" value={formData.phone} />
 
-          <ReviewItem label="Email" value={formData.email} />
-          <ReviewItem label="ID Number" value={formData.idNumber} />
+          <ReviewItem label="Email" value={formData.email} fullWidth />
+          <ReviewItem label="ID Number" value={formData.idNumber} fullWidth />
 
           <ReviewItem label="Vehicle No" value={formData.vehicleNumber} />
           <ReviewItem
@@ -89,7 +105,7 @@ export default function VisitorReviewForm({
             value={formData.numberOfOthers || "0"}
           />
 
-          <ReviewItem label="Visitor Type" value={formData.visitorType} />
+          <ReviewItem label="Visitor Type" value={formatVisitorType(formData.visitorType)} />
 
           {formData.visitorType === "normal" ? (
             <ReviewItem label="Visit Date" value={formData.visitDate} />
@@ -103,10 +119,10 @@ export default function VisitorReviewForm({
       </View>
 
       {/* Buttons */}
-      <View className="flex-row justify-between">
+      <View className="flex-row gap-3">
         <Pressable
           onPress={onBack}
-          className="bg-gray-200 px-6 py-3 rounded-xl"
+          className="flex-1 bg-gray-200 px-6 py-3 rounded-xl items-center"
         >
           <Text className="text-gray-700 font-semibold">Back</Text>
         </Pressable>
@@ -114,7 +130,7 @@ export default function VisitorReviewForm({
         <Pressable
           onPress={handleSubmit}
           disabled={isSubmitting}
-          className={`px-6 py-3 rounded-xl flex-row items-center justify-center ${isSubmitting ? "bg-accent/70" : "bg-accent"
+          className={`flex-1 px-6 py-3 rounded-xl flex-row items-center justify-center ${isSubmitting ? "bg-accent/70" : "bg-accent"
             }`}
         >
           {isSubmitting && <ActivityIndicator size="small" color="#fff" />}

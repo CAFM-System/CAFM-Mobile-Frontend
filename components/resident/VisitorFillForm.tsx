@@ -1,7 +1,25 @@
 import React, { useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Calendar } from "lucide-react-native";
 
-const getTodayString = () => new Date().toISOString().split("T")[0];
+const formatDateLocal = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const parseDateStringLocal = (dateString: string) => {
+  const [year, month, day] = dateString.split("-").map(Number);
+  return new Date(year, month - 1, day);
+};
+
+const getTodayStart = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return today;
+};
 
 interface FormData {
   fullName: string;
@@ -30,6 +48,28 @@ export default function VisitorFillForm({
   onCancel,
 }: Props) {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [activeField, setActiveField] = useState<"visitDate" | "dateFrom" | "dateTo" | null>(null);
+  const [tempDate, setTempDate] = useState(getTodayStart());
+
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    if (selectedDate && activeField) {
+      const dateString = formatDateLocal(selectedDate);
+      onChange(activeField, dateString);
+      setTempDate(selectedDate);
+    }
+    setShowDatePicker(false);
+  };
+
+  const openDatePicker = (field: "visitDate" | "dateFrom" | "dateTo", currentDate: string) => {
+    setActiveField(field);
+    if (currentDate) {
+      setTempDate(parseDateStringLocal(currentDate));
+    } else {
+      setTempDate(getTodayStart());
+    }
+    setShowDatePicker(true);
+  };
 
   const validateAndNext = () => {
     setErrorMsg(null);
@@ -72,7 +112,7 @@ export default function VisitorFillForm({
       }
     }
 
-    const today = new Date(getTodayString());
+    const today = getTodayStart();
 
     if (formData.visitorType === "normal") {
       if (!formData.visitDate) {
@@ -80,7 +120,7 @@ export default function VisitorFillForm({
         return;
       }
 
-      if (new Date(formData.visitDate) < today) {
+      if (parseDateStringLocal(formData.visitDate) < today) {
         setErrorMsg("Date cannot be in the past.");
         return;
       }
@@ -90,7 +130,7 @@ export default function VisitorFillForm({
         return;
       }
 
-      if (new Date(formData.dateTo) < new Date(formData.dateFrom)) {
+      if (parseDateStringLocal(formData.dateTo) < parseDateStringLocal(formData.dateFrom)) {
         setErrorMsg("'To' date cannot be before 'From'.");
         return;
       }
@@ -167,6 +207,8 @@ export default function VisitorFillForm({
           placeholder="Vehicle Number (WP CAA-1234)"
           value={formData.vehicleNumber}
           onChangeText={(v) => onChange("vehicleNumber", v)}
+          autoCapitalize="characters"
+          autoCorrect={false}
           className="bg-primary p-3 rounded-xl"
         />
 
@@ -223,27 +265,36 @@ export default function VisitorFillForm({
 
         <View className="mt-4 space-y-3">
           {formData.visitorType === "normal" ? (
-            <TextInput
-              placeholder="Visit Date (YYYY-MM-DD)"
-              value={formData.visitDate}
-              onChangeText={(v) => onChange("visitDate", v)}
-              className="bg-primary p-3 rounded-xl"
-            />
+            <Pressable
+              onPress={() => openDatePicker("visitDate", formData.visitDate || "")}
+              className="bg-primary p-3 rounded-xl flex-row items-center justify-between"
+            >
+              <Text className={formData.visitDate ? "text-black" : "text-gray-500"}>
+                {formData.visitDate || "Select Visit Date"}
+              </Text>
+              <Calendar size={20} color="#666" />
+            </Pressable>
           ) : (
             <>
-              <TextInput
-                placeholder="Access From"
-                value={formData.dateFrom}
-                onChangeText={(v) => onChange("dateFrom", v)}
-                className="bg-primary p-3 rounded-xl"
-              />
+              <Pressable
+                onPress={() => openDatePicker("dateFrom", formData.dateFrom || "")}
+                className="bg-primary p-3 rounded-xl flex-row items-center justify-between"
+              >
+                <Text className={formData.dateFrom ? "text-black" : "text-gray-500"}>
+                  {formData.dateFrom || "Select Access From Date"}
+                </Text>
+                <Calendar size={20} color="#666" />
+              </Pressable>
 
-              <TextInput
-                placeholder="Access To"
-                value={formData.dateTo}
-                onChangeText={(v) => onChange("dateTo", v)}
-                className="bg-primary p-3 rounded-xl"
-              />
+              <Pressable
+                onPress={() => openDatePicker("dateTo", formData.dateTo || "")}
+                className="bg-primary p-3 rounded-xl flex-row items-center justify-between"
+              >
+                <Text className={formData.dateTo ? "text-black" : "text-gray-500"}>
+                  {formData.dateTo || "Select Access To Date"}
+                </Text>
+                <Calendar size={20} color="#666" />
+              </Pressable>
             </>
           )}
         </View>
@@ -265,6 +316,17 @@ export default function VisitorFillForm({
           <Text className="text-white font-semibold">Next</Text>
         </Pressable>
       </View>
+
+      {/* Date Picker Modal */}
+      {showDatePicker && (
+        <DateTimePicker
+          value={tempDate}
+          mode="date"
+          display="spinner"
+          onChange={handleDateChange}
+          minimumDate={getTodayStart()}
+        />
+      )}
     </View>
   );
 }
