@@ -57,7 +57,9 @@ export default function VisitorReviewForm({
     fullWidth?: boolean;
   }) => (
     <View className={`${fullWidth ? "w-full" : "w-1/2"} mb-4 pr-2`}>
-      <Text className="text-xs text-gray-500 uppercase mb-1 tracking-wide">{label}</Text>
+      <Text className="text-xs text-gray-500 uppercase mb-1 tracking-wide">
+        {label}
+      </Text>
       <Text className="font-semibold text-secondary" numberOfLines={2}>
         {value || "-"}
       </Text>
@@ -105,7 +107,10 @@ export default function VisitorReviewForm({
             value={formData.numberOfOthers || "0"}
           />
 
-          <ReviewItem label="Visitor Type" value={formatVisitorType(formData.visitorType)} />
+          <ReviewItem
+            label="Visitor Type"
+            value={formatVisitorType(formData.visitorType)}
+          />
 
           {formData.visitorType === "normal" ? (
             <ReviewItem label="Visit Date" value={formData.visitDate} />
@@ -130,11 +135,14 @@ export default function VisitorReviewForm({
         <Pressable
           onPress={handleSubmit}
           disabled={isSubmitting}
-          className={`flex-1 px-6 py-3 rounded-xl flex-row items-center justify-center ${isSubmitting ? "bg-accent/70" : "bg-accent"
-            }`}
+          className={`flex-1 px-6 py-3 rounded-xl flex-row items-center justify-center ${
+            isSubmitting ? "bg-accent/70" : "bg-accent"
+          }`}
         >
           {isSubmitting && <ActivityIndicator size="small" color="#fff" />}
-          <Text className={`text-white font-semibold ${isSubmitting ? "ml-2" : ""}`}>
+          <Text
+            className={`text-white font-semibold ${isSubmitting ? "ml-2" : ""}`}
+          >
             {isSubmitting ? "Submitting..." : "Confirm & Submit"}
           </Text>
         </Pressable>
