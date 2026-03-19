@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import AuthService from "../../services/auth.service";
 import visitorService from "../../services/visitor.service";
 import VisitorFillForm from "./VisitorFillForm";
@@ -67,7 +67,7 @@ export default function VisitorMainForm({ onCancel, onSuccess }: Props) {
   }, []);
 
   const handleInputChange = (field: keyof FormData, value: string) => {
-    if (field === "vehicleNumber" || field === "idNumber") {
+    if (field === "idNumber") {
       setFormData((prev) => ({
         ...prev,
         [field]: value.toUpperCase(),
@@ -85,7 +85,7 @@ export default function VisitorMainForm({ onCancel, onSuccess }: Props) {
     phone: formData.phone,
     id_number: formData.idNumber,
     email: formData.email,
-    vehicle_number: formData.vehicleNumber,
+    vehicle_number: formData.vehicleNumber?.toUpperCase().trim(),
     visitor_type: formData.visitorType.toUpperCase(),
     valid_from: formData.dateFrom || formData.visitDate,
     valid_until: formData.dateTo || null,
@@ -117,7 +117,12 @@ export default function VisitorMainForm({ onCancel, onSuccess }: Props) {
   }
 
   return (
-    <View className="flex-1 p-5 bg-primary">
+    <ScrollView
+      className="flex-1 bg-primary"
+      contentContainerStyle={{ padding: 20, paddingBottom: 32 }}
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
+    >
       {/* Header */}
       <View className="mb-6">
         <Text className="text-xl font-bold text-secondary">Invite Guest</Text>
@@ -177,6 +182,6 @@ export default function VisitorMainForm({ onCancel, onSuccess }: Props) {
           onSubmit={handleSubmit}
         />
       )}
-    </View>
+    </ScrollView>
   );
 }
