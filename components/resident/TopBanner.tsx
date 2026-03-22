@@ -62,11 +62,7 @@ export default function TopBanner({ onCreate }: Props) {
         </Text>
 
         <Text className="text-primary/80 text-base mt-1">
-          You have{" "}
-          <Text className="font-bold text-primary">
-            {activeCount}
-          </Text>{" "}
-          active maintenance request{activeCount !== 1 ? "s" : ""}.
+          Welcome Back - you have active requests
         </Text>
 
         {/* CTA */}
@@ -76,9 +72,7 @@ export default function TopBanner({ onCreate }: Props) {
         >
           <View className="flex-row items-center gap-2">
             <Ionicons name="add-circle-outline" size={18} color="#334443" />
-            <Text className="text-secondary font-bold">
-              Create Request
-            </Text>
+            <Text className="text-secondary font-bold">Create Request</Text>
           </View>
         </Pressable>
       </View>
